@@ -1,8 +1,5 @@
 # origami_curvatura
-Creacion de pliegues con curvatura especifica.
 
-https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics
+The purpouse of this code is to study the curvature of foldings patterns.
 
-https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks
-
-https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started
+It is implemented in JavaScript. It used the rabbit ear libray (https://rabbitear.org/) and Origami simulator (https://origamisimulator.org/). The first one developed around the mathematical characteristics of Origami, while the second simulates the folding of the 3D structure.
