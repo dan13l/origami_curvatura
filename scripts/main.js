@@ -1,11 +1,24 @@
-const myHeading = document.querySelector("h1");
-myHeading.textContent = "La curvatura de Gauss";
-
 
 document.querySelector("img").addEventListener("click", () => {
   //Ejemplo de un listener
   alert("Ouch! Stop poking me!");
 });
+
+
+const body = document.body;
+//const body = document.getElementById("body")
+
+
+//Como selecciono el lugar para colocar el texto y no que siempre este de ultimo
+const panel = document.createElement("div");
+panel.setAttribute("class", "picaSale");
+body.appendChild(panel);
+
+
+//Como hago para que aparezca despues del Nav, que es fijo del html.
+const msg = document.createElement("p");
+msg.textContent = "This is a message box";
+panel.appendChild(msg);
 
 
 function createParagraph() {
@@ -17,7 +30,22 @@ function createParagraph() {
 
 const buttons = document.querySelectorAll("button");
 
+
 for (const button of buttons) {
   button.addEventListener("click", createParagraph);
 }
+
+
+
+
+const picaElBoton = body.createElement("button");
+picaElBoton.textContent = "aja x";
+panel.appendChild(picaElBoton);
+
+
+
+picaElBoton.addEventListener("click", () =>
+  panel.parentNode.removeChild(panel),
+);
+
 
