@@ -4,3 +4,15 @@ img {
   display: block;
   margin: 0 auto;
 }
+
+body {
+  background: #141E46;
+}
+
+.text-body {
+  color: #BB2525;/*#FFF5E0*/
+}
+
+navbar.bg-color {
+  background: #BB2525;
+}

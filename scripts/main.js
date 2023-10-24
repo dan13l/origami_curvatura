@@ -3,29 +3,39 @@ document.querySelector("img").addEventListener("click", () => {
   alert("Ouch! Stop poking me!");
 });
 
+const main = document.querySelector("main");
 
-//Creo un Div nuevo para ingresar un texto despues de activar un boton.
-const body = document.body;
-
-//¿Como selecciono el lugar del DOM para colocar lo que se inserta? <main> no sirve...
+///////////////////Crea el Div sobre el que actua el JS
 const panel = document.createElement("div");
 panel.setAttribute("class", "picaSale");
-body.appendChild(panel);
+main.appendChild(panel); //¿Como selecciono el lugar del DOM para colocar lo que se inserta? <main> no sirve...
 
+//Ingresa texto base
 const msg = document.createElement("p");
-msg.textContent = "Esta caja desaparecerá, jaja";
+msg.textContent = "Esta caja cambiará, jaja";
 panel.appendChild(msg);
 
+
+/////////////////Boton del color
 const picaloBt = document.createElement("button");
 picaloBt.textContent = "aja x";
 panel.appendChild(picaloBt);
 
-picaloBt.addEventListener("click", () =>
-  panel.parentNode.removeChild(panel));
+
+function random(number) {
+  return Math.floor(Math.random() * (number + 1));
+}
+
+picaloBt.addEventListener("click", () => {
+  const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
+  panel.style.backgroundColor = rndCol;
+});
 
 
+
+///////////////////Boton de agregar texto
 const msjBt = document.createElement("button");
-msjBt.setAttribute("class", "otro");
+//msjBt.setAttribute("class", "otro"); //no es necesario
 msjBt.textContent = "Click me, el otro";
 panel.appendChild(msjBt);
 
@@ -35,17 +45,5 @@ function createParagraph() {
   // Agrega el parrafo <p>
   const para = document.createElement("p");
   para.textContent = "You clicked the button!";
-  body.appendChild(para);
+  panel.appendChild(para);
 }
-
-const colorBt = body.querySelector("button");
-
-function random(number) {
-  return Math.floor(Math.random() * (number + 1));
-}
-
-colorBt.addEventListener("click", () => {
-  const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`;
-  //picaloBt.style.backgroundColor = rndCol;
-  body.style.backgroundColor = rndCol;
-});
