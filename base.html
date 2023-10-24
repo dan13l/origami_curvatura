@@ -23,74 +23,78 @@
 
     <title>Origami Test</title>
   </head>
+
+
   <body>
+      <!-- Divide on 2 spaces, lateral navbar and content -->
+      <div class="row container-fluid">
+        <!-- barra lateral -->
+        <div class="col-2" style="background-color: #bb2525;">
+          <div class="row align-items-center">
+            <h2>Proyectos</h2>
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Circles around circles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Curvature and origami</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Computational complexity and origami</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Fractal topology</a>
+                </li>
+              </ul>
+          </div>
 
-    <header>
-      <h1>
-        Curvature and Origami
-      </h1>
-    </header>
+          <div class="row align-items-end">
+            <ul class="nav">
+              <li lass="nav-item">
+                <a class="nav-link" href="#">Daniel Arias Mutis</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Contenido central -->
+        <div class="col">
+          <div class="container">
+            <header>
+              <h1>
+                Curvature and Origami
+              </h1>
+            </header>
+
+            <main>
+
+              <article>
+                <p>
+                  Seguir tutorial <br>
+                  Antes de instalar nodejs, revisar version presente y si es preciso desinstalarla. <br>
+                  <a href="https://github.com/nodesource/distributions#installation-instructions">instalar nodejs</a> <br>
+                  <a href= "https://www.jetbrains.com/help/pycharm/transpiling-sass-less-and-scss-to-css.html#sass_scss_less_before_you_start">Pycharm, configurar SASS</a> <br>
+                  <a href="https://stackoverflow.com/questions/65156775/multiple-p5-js-canvases-in-the-same-page">Multiple p5 canvas</a>
+                </p>
+                <p>
+                  Hay que ajustar el JS para seleccionar los elementos que cambian...
+                </p>
+
+                <figure>
+                  <img src="images/Tsunami_by_hokusai_19th_century.jpg" alt="tsunami" />
+                  <figcaption>
+                    La ola de Hokusai, tomado de wikipedia
+                  </figcaption>
+                </figure>
+              </article>
 
 
-    <div class="container mt-3">
-      <h2>Vertical Nav</h2>
-      <p>Use the .flex-column class to create a vertical nav:</p>
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-      </ul>
-    </div>
 
-
-    <!--<nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="#">Projects</a>
-            <a class="nav-link" href="#">Contact</a>
+            </main>
           </div>
         </div>
       </div>
-    </nav> -->
 
-
-    <main>
-
-      <article>
-        <p>
-          <a href="https://stackoverflow.com/questions/65156775/multiple-p5-js-canvases-in-the-same-page">Multiple p5 canvas</a>
-        </p>
-
-
-        <figure>
-          <img src="images/Tsunami_by_hokusai_19th_century.jpg" alt="tsunami" />
-          <figcaption>
-            La ola de Hokusai, tomado de wikipedia
-          </figcaption>
-        </figure>
-      </article>
-
-
-
-    </main>
-
-    <footer>
-      <p>Daniel Arias Mutis</p>
-    </footer>
   </body>
 </html>
