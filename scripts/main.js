@@ -3,12 +3,12 @@ document.querySelector("img").addEventListener("click", () => {
   alert("Ouch! Stop poking me!");
 });
 
-const main = document.querySelector("main");
+const contenido = document.getElementById("contenido");
 
 ///////////////////Crea el Div sobre el que actua el JS
 const panel = document.createElement("div");
 panel.setAttribute("class", "picaSale");
-main.appendChild(panel); //¿Como selecciono el lugar del DOM para colocar lo que se inserta? <main> no sirve...
+contenido.appendChild(panel);
 
 //Ingresa texto base
 const msg = document.createElement("p");
