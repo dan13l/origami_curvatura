@@ -47,3 +47,18 @@ function createParagraph() {
   para.textContent = "You clicked the button!";
   panel.appendChild(para);
 }
+
+
+/*
+//Este funciona, pero no es el mismo svg de rabbit ear
+var draw = SVG().addTo('#svgGraph').size(300, 300)
+var rect = draw.rect(100, 100).attr({ fill: '#f06' })
+*/
+
+const dibujo = document.getElementById("svgGraph");
+
+svg.size(20, 20);
+svg.background("green", true);
+svg.rect(9,9).stroke("red").fill("blue")
+
+dibujo.appendChild(svg)

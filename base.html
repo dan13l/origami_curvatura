@@ -12,6 +12,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous" defer></script>
 
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+    <!-- SVG.js -->
+    <script type="text/javascript"  src=https://robbykraft.github.io/SVG/svg.js" defer></script>
+
     <!-- Rabbit Ear -->
     <script type="text/javascript"
             src="https://robbykraft.github.io/Origami/rabbit-ear.js" defer></script>
@@ -71,7 +80,33 @@
 
           <p>
             Hay que ajustar el JS para seleccionar los elementos que cambian...
+              si empiezo a escribir aca, que tan rapido se muestra el cambio?
+              Apenas paso la pantalla, esta chevere.
           </p>
+
+          <div id="papel">
+            <p>
+                Aca debe aparecer el origami de Rabbit Ear
+            </p>
+          </div>
+
+          <div id="svgGraph" style="background-color: #FFB84C;">
+
+          </div>
+            <p>
+                Aca debe aparecer un dibujo con SVG <a href="https://rabbitear.org/book/svg.html">SVG </a>
+            </p>
+
+          <!--<svg
+            version="1.1"
+            baseProfile="full"
+            width="300"
+            height="200"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <rect width="100%" height="100%" fill="black" />
+            <circle cx="150" cy="100" r="90" fill="blue" />
+          </svg> -->
 
           <figure>
             <img src="images/Tsunami_by_hokusai_19th_century.jpg" alt="tsunami" />
@@ -79,6 +114,12 @@
               La ola de Hokusai, tomado de wikipedia
             </figcaption>
           </figure>
+
+          <p>
+              Now we are talking baby <br>
+              When \( a \ne 0 \in \mathbb{R} \), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+                \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+          </p>
 
       </div>
 
