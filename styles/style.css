@@ -17,3 +17,8 @@ body {
   background: #141E46;
   color: #FFF5E0;
 }
+
+svg {
+  height: 40%;/*200px;*/
+  width: 80%;/*200px;*/
+}
