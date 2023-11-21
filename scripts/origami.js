@@ -2,7 +2,7 @@
 const caja = document.getElementById("papel");
 
 // Creo el elemento svg de rabbit ear sobre el cual se va a dibujar
-var dibujo = ear.svg()
+var dibujo = ear.svg();
 
 // define el tamaño del area en que se dibuja el svg. esquina superior izq (x,y), esquina inf derecha (x,y)
 dibujo.size(-0.1, -0.1, 8.1, 5.1);
@@ -43,12 +43,13 @@ for (let i = 0; i < col; i++) {
 
         // Crea los vertices
         base.vertices_coords.push( // inicia en el centro baja al centro y gira contrario al reloj por fuera
-            [ posx + 2*dx , posy + cent ], //centro
-            [ posx + 2*dx , posy ], [ posx + 4*dx , posy ], // base del triangulo sospecha
-            [ posx + 3*dx , posy + dy ], // costado
-            [ posx + 2*dx , posy + 2*dy ], // punta del triangulo
-            [ posx + dx , posy + dy ], // costado
-            [ posx , posy ] //ultimo
+            [ posx + 2*dx , posy + cent ], // mediana (centro) [0]
+            [ posx + 2*dx , posy ], // base 1 del triangulo [1]
+            [ posx + 4*dx , posy ], // base 2 del triangulo [2]
+            [ posx + 3*dx , posy + dy ], // mediatriz 1 [3]
+            [ posx + 2*dx , posy + 2*dy ], // punta del triangulo [4]
+            [ posx + dx , posy + dy ], // mediatriz 2 [5]
+            [ posx , posy ] //ultimo (base 3 del triangulo) [6]
         );
 
         // Crea las aristas
@@ -97,7 +98,7 @@ dibujo.scale(1, -1)
     .fontSize('3px');
 
 
-caja.appendChild(dibujo)
+caja.appendChild(dibujo);
 
 /*
 // Estructura de un triangulo.
@@ -118,7 +119,7 @@ var nuevo = {
         [0, 1],
         [1, 2], [2, 3], [3,4], [4,5], [5,6], [6,1], // Triangulo exterior 1,2,3,4,5,6
         [0,3], [0,5], // 0*,7,8 Mediatrices Montaña
-        [0,2], [0,4], [0,6], // 9,10,11Mediatrices Valle
+        [0,2], [0,4], [0,6], // 9,10,11 Mediatrices Valle
     ],
     faces_vertices: [ [0,1,9], [9,2,7], [7,3,10], [8,4,10], [8,5,11], [11,6,0] ],
     edges_assignment: [

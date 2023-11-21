@@ -5,7 +5,7 @@ const caja = document.getElementById("papel");
 var dibujo = ear.svg()
 
 // define el tamaño del area en que se dibuja el svg. esquina superior izq (x,y), esquina inf derecha (x,y)
-dibujo.size(-0.1, -0.1, 8.1, 5.1);
+dibujo.size(-0.1, -0.1, 8.1, 5.3);
 
 //dibujo.background('black');
 
@@ -18,15 +18,22 @@ base.edges_assignment = [];
 
 const fil = 1;
 const col = 10;
+const w = dibujo.getWidth();
+const h = dibujo.getHeight();
 
 //Estoy hay que volverlo circular...
-const r = 3 ;
-
-const da = Math.PI/(col*4) ;
-
-const dy = Math.sqrt(3)/4;
+const da = Math.PI/(col*2) ; // este no cambia
+const r = 2.5 ;
+const m = Math.sqrt(3)/4;
 const cent = 1/( 2 * Math.sqrt(3) );
 const EPSILON = 0.001 ;
+
+
+//variables que van cambiando conforme el loop va realizandose
+var rt=0; //cambio en el radio
+var mt=0; //cambio en la posicion de las mediatrices
+var centt=0;
+var pt =0;
 
 //Borrar, pero esperemos mientras gharantizo que funcione...
 const dx = 0.25;
@@ -35,41 +42,38 @@ var nv = 0; //numero de vertices existentes
 
 
 // Crea la estructura de vertices y edges con asignaciones. Se crea un triangulo a la vez y luego se junta.
-for (let i = 0; i < col; i++) {
+for (let i = 0; i < col+1; i++) {
     for (let j = 0; j < fil; j++) {
-        // las posiciones de cada columna cambian dependiendo si es par o impar
+        // las posiciones de cada columna cambian dependiendo si es par o impar debe subir y bajar
         if (i%2 === 0) {
-            var posx= i - (i*dx);
-            //var posx = Math.cos(i*4*da); //rastrea el sector angular en que nos encontramos
-            var posy= 2*j*dy;
-            //var posy = Math.sin(i*4*da)
+            //deben estar a la altura del radio externo
+            rt = r ;
+            mt = r - m * (2* Math.sin(4*da)) ;
+            centt = r - cent * (2* Math.sin(4*da)) ;
+            pt = r - 2*m * (2* Math.sin(4*da)) ;
         } else {
-            var posx= i - (i*dx);
-            var posy= (2*j+1)*dy;
+            /*
+            //deben iniciar a la altura de la mediatriz del triangulo de la columna par
+            rt = r - m * (2* Math.sin(4*da)) ;
+            mt = rt - mt * (2* Math.sin(4*da)) ;
+            centt = rt - centt * (2* Math.sin(4*da)) ;
+            pt = rt - 2*mt * (2* Math.sin(4*da)) ;
+            */
         }
 
         base.vertices_coords.push( // inicia en el centro baja al centro y gira contrario al reloj por fuera
-            [ r * Math.cos(da*(i+2)) + 2 , r * Math.sin(da*(i+2)) + 2 ] //centro [ posx + 2*dx , posy + cent ],
-            //[ posx + 2*dx , posy ], [ posx + 4*dx , posy ], // base del triangulo sospecha
-            //[ posx + 3*dx , posy + dy ], // costado
-            //[ posx + 2*dx , posy + 2*dy ], // punta del triangulo
-            //[ posx + dx , posy + dy ], // costado
-            //[ posx , posy ] //ultimo
+            [ w/2 + (rt-0.2) * Math.cos( (4*i + 2 )* da ), h/2 + (rt-0.2) * Math.sin( (4*i + 2) * da ) ], // mediana
+            [ w/2 + rt * Math.cos( (4*i + 2) * da ), h/2 + rt * Math.sin( (4*i + 2) * da ) ], // centro de la base
+            [ w/2 + rt * Math.cos( (4*i + 4) * da ), h/2 + rt * Math.sin( (4*i + 4) * da ) ], // base del triangulo
+            [ w/2 + mt * Math.cos( (4*i + 3) * da ), h/2 + mt * Math.sin( (4*i + 3) * da ) ], // mediatriz
+            [ w/2 + pt * Math.cos( (4*i + 2) * da ), h/2 + pt * Math.sin( (4*i + 2) * da ) ], // punta
+            [ w/2 + mt * Math.cos( (4*i + 1) * da ), h/2 + mt * Math.sin( (4*i + 1) * da ) ], // mediatriz
+            [ w/2 + rt * Math.cos( (4*i) * da ), h/2 + rt * Math.sin( (4*i) * da ) ], // ultimo (completa base del triangulo)
         );
 
-        /*
+
         //Establesco el numero actual de vertices antes de agregar los nuevos
         nv = ear.graph.count(base, "vertices");
-
-        // Crea los vertices
-        base.vertices_coords.push( // inicia en el centro baja al centro y gira contrario al reloj por fuera
-            [ posx + 2*dx , posy + cent ], //centro
-            [ posx + 2*dx , posy ], [ posx + 4*dx , posy ], // base del triangulo sospecha
-            [ posx + 3*dx , posy + dy ], // costado
-            [ posx + 2*dx , posy + 2*dy ], // punta del triangulo
-            [ posx + dx , posy + dy ], // costado
-            [ posx , posy ] //ultimo
-        );
 
         // Crea las aristas
         base.edges_vertices.push(
@@ -83,7 +87,7 @@ for (let i = 0; i < col; i++) {
         base.edges_assignment.push(
             "M", "M", "M", "M", "M", "M", "M", "M", "M",
             "V", "V", "V" );
-         */
+
     }
 }
 
@@ -92,14 +96,11 @@ ear.graph.clean(base, EPSILON)
 
 // Establece los limites externos.
 
-//ear.graph.transform(graph, matrix)
-
 //cuenta la cantidad de vertices
 nv = ear.graph.count(base, "vertices");
 
 //Establece las caras del pliegue una vez han sido definidos las aristas.
 base.populate();
-
 
 //dibuja los vertices
 dibujo.origami.vertices(base)
@@ -112,35 +113,8 @@ dibujo.origami.edges(base).strokeWidth(0.01); // dibuja los edges con el patron 
 
 //mostrar los numeros de los vertices
 /*Toca arreglar el texto*/
-dibujo.text( nv.toString() , 2, 4.8)
+dibujo.text( nv.toString() , w/2 - 0.5  , h/2 + 0.5)
     .fill('gold')
-    .fontSize('3px');
+    .fontSize('1px');
 
-
-caja.appendChild(dibujo)
-
-/*
-// Estructura de un triangulo.
-var nuevo = {
-    vertices_coords: [ // inicia en el centro baja al centro y gira contrario al reloj por fuera
-        [ posx + 2*dx, posy + cent ], //centro
-        [ posx + 2*dx, posy ], [ posx + 4*dx, posy ], // base del triangulo sospecha
-        [ posx + 3*dx, posy + dy ], // costados
-        [ posx + 2*dx, posy + 2*dy ], // punta del triangulo
-        [ posx + dx, posy + dy ],
-        [ posx, posy ], //ultimo
-    ],
-    edges_vertices: [
-        [0, 1],
-        [1, 2], [2, 3], [3,4], [4,5], [5,6], [6,1], // Triangulo exterior 1,2,3,4,5,6
-        [0,3], [0,5], // 0*,7,8 Mediatrices Montaña
-        [0,2], [0,4], [0,6], // 9,10,11Mediatrices Valle
-    ],
-    faces_vertices: [ [0,1,9], [9,2,7], [7,3,10], [8,4,10], [8,5,11], [11,6,0] ],
-    edges_assignment: [
-        "M", "M", "M", "M","M","M", "M", "M", "M",
-        "V", "V", "V",
-    ],
-};
-base=nuevo;
-*/
+caja.appendChild(dibujo);
