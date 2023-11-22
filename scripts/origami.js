@@ -106,26 +106,29 @@ const dx = 0.25;
 const dy = Math.sqrt(3)/4;
 const cent = 1/( 2 * Math.sqrt(3) );
 
-var nuevo = {
-    vertices_coords: [ // inicia en el centro baja al centro y gira contrario al reloj por fuera
-        [ posx + 2*dx, posy + cent ], //centro
-        [ posx + 2*dx, posy ], [ posx + 4*dx, posy ], // base del triangulo sospecha
-        [ posx + 3*dx, posy + dy ], // costados
-        [ posx + 2*dx, posy + 2*dy ], // punta del triangulo
-        [ posx + dx, posy + dy ],
-        [ posx, posy ], //ultimo
-    ],
-    edges_vertices: [
-        [0, 1],
-        [1, 2], [2, 3], [3,4], [4,5], [5,6], [6,1], // Triangulo exterior 1,2,3,4,5,6
-        [0,3], [0,5], // 0*,7,8 Mediatrices Montaña
-        [0,2], [0,4], [0,6], // 9,10,11 Mediatrices Valle
-    ],
-    faces_vertices: [ [0,1,9], [9,2,7], [7,3,10], [8,4,10], [8,5,11], [11,6,0] ],
-    edges_assignment: [
-        "M", "M", "M", "M","M","M", "M", "M", "M",
-        "V", "V", "V",
-    ],
-};
-base=nuevo;
+// estructura del triangulo
+var base = ear.graph();
+base.vertices_coords = [];
+base.edges_vertices = [];
+base.edges_assignment = [];
+
+base.vertices_coords.push( // inicia en el centro baja al centro y gira contrario al reloj por fuera
+    [ 2 * dx , cent ], // mediana [0]
+    [ 2 * dx , 0 ], // base 1 del triangulo [1]
+    [ 4 * dx , 0 ], // base 2 del triangulo [2]
+    [ 3 * dx , dy ], // mediatriz 1 [3]
+    [ 2 * dx , 2 * dy ], // punta del triangulo [4]
+    [ dx , dy ], // mediatriz 2 [5]
+    [ 0 , 0 ], //ultimo (base 3 del triangulo) [6]
+);
+base.edges_vertices.push(
+    [0, 1],
+    [1, 2], [2, 3], [3,4], [4,5], [5,6], [6,1], // Triangulo exterior 1,2,3,4,5,6
+    [0,3], [0,5], // 0*,7,8 Mediatrices Montaña
+    [0,2], [0,4], [0,6], // 9,10,11 Mediatrices Valle
+);
+base.edges_assignment.push(
+    "M", "M", "M", "M","M","M", "M", "M", "M",
+    "V", "V", "V",
+);
 */
