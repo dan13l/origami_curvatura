@@ -16,8 +16,8 @@ base.vertices_coords = [];
 base.edges_vertices = [];
 base.edges_assignment = [];
 
-const fil = 2;
-const col = 10;
+const fil = 4;
+const col = 8;
 
 const dx = 0.25;
 const dy = Math.sqrt(3)/4;
@@ -70,9 +70,15 @@ for (let i = 0; i < col; i++) {
 // Elimina duplicados
 ear.graph.clean(base, EPSILON)
 
-// Establece los limites externos.
 
-//ear.graph.transform(graph, matrix)
+// Establece los limites externos.
+var sospechosos = ear.graph.getPlanarBoundary(base);
+
+let i = 0;
+for (ed in sospechosos["edges"]) {
+    base.edges_assignment[ sospechosos["edges"][i] ] = "B";
+    i++;
+}
 
 //cuenta la cantidad de vertices
 nv = ear.graph.count(base, "vertices");
@@ -95,7 +101,7 @@ dibujo.origami.edges(base).strokeWidth(0.01); // dibuja los edges con el patron 
 dibujo.scale(1, -1)
     .text( nv.toString() , 2, 4.8)
     .fill('gold')
-    .fontSize('3px');
+    .fontSize('1px');
 
 
 caja.appendChild(dibujo);
