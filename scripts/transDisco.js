@@ -1,5 +1,7 @@
 //Toma el elemento de la pagina para insertar el origami.
-const caja = document.getElementById("papel");
+var caja = document.getElementById("papel");
+
+FOLD = require('fold');
 
 // Creo el elemento svg de rabbit ear sobre el cual se va a dibujar
 var dibujo = ear.svg();
@@ -15,10 +17,9 @@ var patron = ear.graph();
 patron.vertices_coords = [];
 patron.edges_vertices = [];
 patron.edges_assignment = [];
-const fil = 6; //6
-const col = 48; //48 -- Realmente son col + 1/3*col
+const fil = 2; //8
+const col = 12; //48 -- Realmente son col + 1/3*col
 const da = Math.PI/(2*col);
-const r = 2.5 ;
 
 
 /*Calculo los radios y distancias de acuerdo al numero de filas y columnas
@@ -27,7 +28,7 @@ necesito radios = 2*filas +1
 distancias = 2*filas+1
 */
 
-var radios = [r];
+var radios = [1];
 var dist = [ Math.sqrt( 2 * (radios[0]**2) * (1 - Math.cos(2*da))) ]; //distancia entre puntos de la base [2] [3]
 
 /*para encontrar el nuevo radio, debo intersectar el circulo de dist[i] centrado en [r1,0]
@@ -72,13 +73,13 @@ for (let i = 0; i < col+1/3*col; i++) {
 
         //iniciemos con circulo externo [1] [2] [6]
         patron.vertices_coords.push(
-            [ w/2 + (r3+2*(r1-r3)/3)*Math.cos(posda + 2*da) , h/2 + (r3+ 2*(r1-r3)/3)*Math.sin(posda + 2*da) ], //  mediana (centro) [0] el radio esta aproximado [ posx + 2*dx , posy + cent ]
-            [ w/2 + r1*Math.cos(posda + 2*da) , h/2 + r1*Math.sin(posda + 2*da) ],  // base 1 del triangulo [1] [ posx + 2*dx , posy ],
-            [ w/2 + r1*Math.cos(posda + 4*da) , h/2 + r1*Math.sin(posda + 4*da) ],  // base 2 del triangulo [2] [ posx + 2*dx , posy ]
-            [ w/2 + r2*Math.cos(posda + 3*da) , h/2 + r2*Math.sin(posda + 3*da) ],  // mediatriz 1 [3] [ posx + 3*dx , posy + dy ],
-            [ w/2 + r3*Math.cos(posda + 2*da) , h/2 + r3*Math.sin(posda + 2*da) ],  // punta del triangulo [4] [ posx + 2*dx , posy + 2*dy ],
-            [ w/2 + r2*Math.cos(posda + da) , h/2 + r2*Math.sin(posda + da) ],      // mediatriz 2 [5] [ posx + dx , posy + dy ],
-            [ w/2 + r1*Math.cos(posda) , h/2 + r1*Math.sin(posda) ]                 //ultimo (base 3 del triangulo) [6] [ posx , posy ]
+            [ ( r3 + 2*(r1-r3)/3 )*Math.cos(posda + 2*da) , ( r3 + 2*(r1-r3 )/3)*Math.sin(posda + 2*da) ], //  mediana (centro) [0] el radio esta aproximado [ posx + 2*dx , posy + cent ]
+            [ r1*Math.cos(posda + 2*da) , r1*Math.sin(posda + 2*da) ],  // base 1 del triangulo [1] [ posx + 2*dx , posy ],
+            [ r1*Math.cos(posda + 4*da) , r1*Math.sin(posda + 4*da) ],  // base 2 del triangulo [2] [ posx + 2*dx , posy ]
+            [ r2*Math.cos(posda + 3*da) , r2*Math.sin(posda + 3*da) ],  // mediatriz 1 [3] [ posx + 3*dx , posy + dy ],
+            [ r3*Math.cos(posda + 2*da) , r3*Math.sin(posda + 2*da) ],  // punta del triangulo [4] [ posx + 2*dx , posy + 2*dy ],
+            [ r2*Math.cos(posda + da) , r2*Math.sin(posda + da) ],      // mediatriz 2 [5] [ posx + dx , posy + dy ],
+            [ r1*Math.cos(posda) , r1*Math.sin(posda) ]                 //ultimo (base 3 del triangulo) [6] [ posx , posy ]
         );
 
         // Crea las aristas
@@ -127,17 +128,29 @@ for (let i = 0; i < col+1/3*col; i++) {
     }
 }
 
+// elimina vertices duplicados (el patron produce muchos)
 ear.graph.clean(patron, EPSILON);
 
+//Establece las caras del pliegue una vez han sido definidos las aristas.
 patron.populate();
 
 //cuenta la cantidad de vertices
 nv = ear.graph.count(patron, "vertices");
 
-//Establece las caras del pliegue una vez han sido definidos las aristas.
-// patron.populate();
+// Proyeccion estereografica.
+zTrans = [];
 
-//dibuja los vertices
+for (let i=0; i < patron.vertices_coords.length; i++) {
+    zTrans.push( [
+        ( 2 * patron.vertices_coords[0] )/( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 + 1 ) , // x = 2x/(x²+y²+1)
+        ( 2 * patron.vertices_coords[1] )/( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 + 1 ) , // y = 2y/(x²+y²+1)
+        ( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 - 1 )/( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 + 1 ) // z = (x²+y²-1)/(x²+y²+1)
+    ]);
+}
+
+//////////////// Para el SVG escala y centra
+patron.scale((h-0.4)/2);
+patron.translate(w/2,h/2);
 
 dibujo.origami.vertices(patron)
     .childNodes
@@ -148,10 +161,19 @@ dibujo.origami.vertices(patron)
 dibujo.origami.edges(patron).strokeWidth(0.01); // dibuja los edges con el patron de pliegues
 
 //mostrar los numeros de los vertices
-/*Toca arreglar el texto*/
+/*Toca arreglar el texto
 dibujo.text( (col + 1/3*col).toString() , w/2 - 0.6  , h/2 + 0.4)
     .fill('gold')
     .fontSize('1px');
-
+*/
 
 caja.appendChild(dibujo);
+
+//////////// Crear el objeto Fold
+
+//este = JSON.stringify(patron);
+//este = FOLD.convert.toJSON(patron);
+este = patron.prototype.toString;
+
+const myFold = document.getElementById("objFold");
+myFold.textContent = este;
