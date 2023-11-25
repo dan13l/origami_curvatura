@@ -17,8 +17,8 @@ var patron = ear.graph();
 patron.vertices_coords = [];
 patron.edges_vertices = [];
 patron.edges_assignment = [];
-const fil = 2; //8
-const col = 12; //48 -- Realmente son col + 1/3*col
+const fil = 8; //8
+const col = 48; //48 -- Realmente son col + 1/3*col
 const da = Math.PI/(2*col);
 
 
@@ -173,7 +173,7 @@ caja.appendChild(dibujo);
 
 //este = JSON.stringify(patron);
 //este = FOLD.convert.toJSON(patron);
-este = patron.prototype.toString;
+este = patron.prototype.toString.call(t);
 
 const myFold = document.getElementById("objFold");
 myFold.textContent = este;
