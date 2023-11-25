@@ -173,7 +173,12 @@ caja.appendChild(dibujo);
 
 //este = JSON.stringify(patron);
 //este = FOLD.convert.toJSON(patron);
-este = patron.prototype.toString.call(t);
+
+/* estos dos crean el JSON pero no lo reconoce origami simulator,
+ademas lo que hago es cortar y pegar el resultado en un txt al que le cambio la extension a .FOLD
+*/
+
+este = patron.vertices_coords.length.toString();
 
 const myFold = document.getElementById("objFold");
 myFold.textContent = este;
