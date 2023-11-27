@@ -47,6 +47,7 @@ var r1 = 0 ; // radio externo, aca iniciado de una vez
 var r2 = 0 ; // radio mediatriz y externo de col vecina
 var r3 = 0 ; // radio mediatriz y externo de col vecina
 let nv = 0; // numero de vertices del patron
+let ne = 0; // numero de edges del patron
 
 const EPSILON = 0.001 ;
 
@@ -68,8 +69,9 @@ for (let i = 0; i < col+1/3*col; i++) {
             r3 = radios[2*j+3];
         }
 
-        //Establesco el numero actual de vertices antes de agregar los nuevos
+        //Establesco el numero actual de vertices y edges antes de agregar los nuevos
         nv = ear.graph.count(patron, "vertices");
+        ne = ear.graph.count(patron, "edges");
 
         //iniciemos con circulo externo [1] [2] [6]
         patron.vertices_coords.push(
@@ -84,17 +86,24 @@ for (let i = 0; i < col+1/3*col; i++) {
 
         // Crea las aristas
         patron.edges_vertices.push(
-            [nv, nv+1],
+            [nv, nv+1], // 0 mediatriz montaña inicio del triangulo
             [nv+1, nv+2], [nv+2, nv+3], [nv+3,nv+4], [nv+4,nv+5], [nv+5,nv+6], [nv+6,nv+1], // Triangulo exterior 1,2,3,4,5,6
-            [nv,nv+3], [nv,nv+5], // 0*,7,8 Mediatrices Montaña
+            [nv,nv+3], [nv,nv+5], // 7,8 Mediatrices Montaña
             [nv,nv+2], [nv,nv+4], [nv,nv+6] // 9,10,11 Mediatrices Valle
         );
 
+        /*
+        //crea las caras, pero faltan los pequeños triangulos entre tirangulos grandes, ese es un gran problema
+        patron.faces_vertices.push(
+            [ne, ne+1, ne+9], [ne+9, ne+2, ne+7], [ne+10, ne+3, ne+10], [ne+10, ne+4, ne+9],
+            [ne+8, ne+5, ne+11], [ne+11, ne+6, ne]
+        );
+        */
 
         // Asigna los pliegues, las caras se llenan despues de terminada la red con graph.populate(), ver despues del loop
         if (j === 0) {
-        // Agrega el borde de la base
             if (i%2 === 0) {
+                // Agrega los bordes en el anillo exterior del disco
                 patron.edges_assignment.push(
                     "M", "B", "B", "M", "M", "B", "B", "M", "M",
                     "V", "V", "V"
@@ -106,6 +115,7 @@ for (let i = 0; i < col+1/3*col; i++) {
                 );
             }
         } else if ( j === fil-1) {
+             // Agrega los bordes en el anillo interior del disco.
             if (i%2 === 0) {
                 patron.edges_assignment.push(
                     "M", "M", "M", "B", "B", "M", "M", "M", "M",
@@ -118,7 +128,7 @@ for (let i = 0; i < col+1/3*col; i++) {
                 );
             }
         } else {
-            // Asigna los pliegues, las caras se llenan despues de terminada la red con graph.populate(), ver despues del loop
+            // Triangulo interior del patron de pliegos
             patron.edges_assignment.push(
                 "M", "M", "M", "M", "M", "M", "M", "M", "M",
                 "V", "V", "V"
@@ -132,19 +142,26 @@ for (let i = 0; i < col+1/3*col; i++) {
 ear.graph.clean(patron, EPSILON);
 
 //Establece las caras del pliegue una vez han sido definidos las aristas.
-patron.populate();
+//patron.populate();
 
-//cuenta la cantidad de vertices
-nv = ear.graph.count(patron, "vertices");
+
+patron.edges_foldAngle = [];
+
+for (let i=0; i < patron.edges_assignment.length ;i++) {
+    patron.edges_foldAngle.push(
+        ear.graph.edgeAssignmentToFoldAngle(patron.edges_assignment[i])
+    );
+}
+
 
 // Proyeccion estereografica.
 zTrans = [];
 
 for (let i=0; i < patron.vertices_coords.length; i++) {
     zTrans.push( [
-        ( 2 * patron.vertices_coords[0] )/( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 + 1 ) , // x = 2x/(x²+y²+1)
-        ( 2 * patron.vertices_coords[1] )/( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 + 1 ) , // y = 2y/(x²+y²+1)
-        ( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 - 1 )/( patron.vertices_coords[0]**2 + patron.vertices_coords[1]**2 + 1 ) // z = (x²+y²-1)/(x²+y²+1)
+        ( 2 * patron.vertices_coords[i][0] )/( patron.vertices_coords[i][0]**2 + patron.vertices_coords[i][1]**2 + 1 ) , // x = 2x/(x²+y²+1)
+        ( 2 * patron.vertices_coords[i][1] )/( patron.vertices_coords[i][0]**2 + patron.vertices_coords[i][1]**2 + 1 ) , // y = 2y/(x²+y²+1)
+        ( patron.vertices_coords[i][0]**2 + patron.vertices_coords[i][1]**2 - 1 )/( patron.vertices_coords[i][0]**2 + patron.vertices_coords[i][1]**2 + 1 ) // z = (x²+y²-1)/(x²+y²+1)
     ]);
 }
 
@@ -152,15 +169,18 @@ for (let i=0; i < patron.vertices_coords.length; i++) {
 patron.scale((h-0.4)/2);
 patron.translate(w/2,h/2);
 
+/*
 dibujo.origami.vertices(patron)
     .childNodes
     .forEach((circle, i, arr) => circle
         .radius(0.022)
         .fill("white"));
+*/
+
 
 dibujo.origami.edges(patron).strokeWidth(0.01); // dibuja los edges con el patron de pliegues
 
-//mostrar los numeros de los vertices
+//muestra la cantidad de vertices
 /*Toca arreglar el texto
 dibujo.text( (col + 1/3*col).toString() , w/2 - 0.6  , h/2 + 0.4)
     .fill('gold')
@@ -171,14 +191,32 @@ caja.appendChild(dibujo);
 
 //////////// Crear el objeto Fold
 
-//este = JSON.stringify(patron);
+
 //este = FOLD.convert.toJSON(patron);
 
 /* estos dos crean el JSON pero no lo reconoce origami simulator,
 ademas lo que hago es cortar y pegar el resultado en un txt al que le cambio la extension a .FOLD
 */
 
-este = patron.vertices_coords.length.toString();
+//este = patron.vertices_coords.length.toString();
+
+/*
+este = "vertices_coords: " + JSON.stringify(zTrans) ;
+este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) ;
+este = "edges_vertices:" + JSON.stringify(patron.edges_vertices) ;
+este = "edges_assignment" + JSON.stringify(patron.edges_assignment) ;
+este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
+este = "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
+
+este = "vertices_coords " + JSON.stringify(zTrans) +
+    "edges_vertices " + JSON.stringify(patron.edges_vertices) +
+    "edges_assignment" + JSON.stringify(patron.edges_assignment) +
+    "faces_vertices" + JSON.stringify(patron.faces_vertices) +
+    "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
+
+este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
+
 
 const myFold = document.getElementById("objFold");
-myFold.textContent = este;
+myFold.textContent = este ;
+*/
