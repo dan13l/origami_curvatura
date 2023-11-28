@@ -1,8 +1,6 @@
 //Toma el elemento de la pagina para insertar el origami.
 var caja = document.getElementById("papel");
 
-FOLD = require('fold');
-
 // Creo el elemento svg de rabbit ear sobre el cual se va a dibujar
 var dibujo = ear.svg();
 
@@ -141,18 +139,12 @@ for (let i = 0; i < col+1/3*col; i++) {
 // elimina vertices duplicados (el patron produce muchos)
 ear.graph.clean(patron, EPSILON);
 
-//Establece las caras del pliegue una vez han sido definidos las aristas.
-//patron.populate();
+//Establece las caras del pliegue una vez han sido definidos las aristas, tiene problemas con el borde interno
+patron.populate();
 
-
-patron.edges_foldAngle = [];
-
-for (let i=0; i < patron.edges_assignment.length ;i++) {
-    patron.edges_foldAngle.push(
-        ear.graph.edgeAssignmentToFoldAngle(patron.edges_assignment[i])
-    );
-}
-
+// Busca la cara en donde se encuentra incluido el origen y la elimina
+let cara = ear.graph.faceContainingPoint(patron, [0,0]);
+patron.faces_vertices.splice(cara,1);
 
 // Proyeccion estereografica.
 zTrans = [];
@@ -165,11 +157,13 @@ for (let i=0; i < patron.vertices_coords.length; i++) {
     ]);
 }
 
+
 //////////////// Para el SVG escala y centra
 patron.scale((h-0.4)/2);
 patron.translate(w/2,h/2);
 
 /*
+//Dibuja un circulo por cada vertice
 dibujo.origami.vertices(patron)
     .childNodes
     .forEach((circle, i, arr) => circle
@@ -177,12 +171,15 @@ dibujo.origami.vertices(patron)
         .fill("white"));
 */
 
+// dibuja los edges con el patron de pliegues
+dibujo.origami.edges(patron).strokeWidth(0.01);
 
-dibujo.origami.edges(patron).strokeWidth(0.01); // dibuja los edges con el patron de pliegues
+/*
+// Dibuja las caras, pero quisiera dibujar el indice de cada cara
+dibujo.origami.faces(patron).fill('gold');
 
-//muestra la cantidad de vertices
-/*Toca arreglar el texto
-dibujo.text( (col + 1/3*col).toString() , w/2 - 0.6  , h/2 + 0.4)
+//muestra un texto en la mitad del SVG
+dibujo.text( cara.toString() , w/2 - 0.6  , h/2 + 0.4)
     .fill('gold')
     .fontSize('1px');
 */
@@ -191,32 +188,31 @@ caja.appendChild(dibujo);
 
 //////////// Crear el objeto Fold
 
-
-//este = FOLD.convert.toJSON(patron);
-
 /* estos dos crean el JSON pero no lo reconoce origami simulator,
-ademas lo que hago es cortar y pegar el resultado en un txt al que le cambio la extension a .FOLD
+Corto y pego el resultado en un .FOLD
 */
 
-//este = patron.vertices_coords.length.toString();
+//este = "vertices_coords: " + JSON.stringify(zTrans) ;
+//este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) ;
+//este = "edges_vertices:" + JSON.stringify(patron.edges_vertices) ;
+//este = "edges_assignment" + JSON.stringify(patron.edges_assignment) ;
+//este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
+//este = "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
 
 /*
-este = "vertices_coords: " + JSON.stringify(zTrans) ;
-este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) ;
-este = "edges_vertices:" + JSON.stringify(patron.edges_vertices) ;
-este = "edges_assignment" + JSON.stringify(patron.edges_assignment) ;
-este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
-este = "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
-
 este = "vertices_coords " + JSON.stringify(zTrans) +
     "edges_vertices " + JSON.stringify(patron.edges_vertices) +
     "edges_assignment" + JSON.stringify(patron.edges_assignment) +
     "faces_vertices" + JSON.stringify(patron.faces_vertices) +
     "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
+*/
 
-este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
+//este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
 
+este = "vertices: " + patron.vertices.length.toString() +
+    ", edges: " + patron.edges.length.toString() +
+    ", faces: " + patron.faces.length.toString()
+;
 
 const myFold = document.getElementById("objFold");
-myFold.textContent = este ;
-*/
+myFold.textContent = este;
