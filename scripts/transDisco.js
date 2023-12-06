@@ -6,7 +6,7 @@ var dibujo = ear.svg();
 
 // define el tamaño del area en que se dibuja el svg. esquina superior izq (x,y), esquina inf derecha (x,y)
 dibujo.size(-0.1, -0.1, 8.1, 5.3);
-//dibujo.background('black');
+dibujo.background('white');
 const w = dibujo.getWidth() ;
 const h = dibujo.getHeight() ;
 
@@ -90,14 +90,6 @@ for (let i = 0; i < col+1/3*col; i++) {
             [nv,nv+2], [nv,nv+4], [nv,nv+6] // 9,10,11 Mediatrices Valle
         );
 
-        /*
-        //crea las caras, pero faltan los pequeños triangulos entre tirangulos grandes, ese es un gran problema
-        patron.faces_vertices.push(
-            [ne, ne+1, ne+9], [ne+9, ne+2, ne+7], [ne+10, ne+3, ne+10], [ne+10, ne+4, ne+9],
-            [ne+8, ne+5, ne+11], [ne+11, ne+6, ne]
-        );
-        */
-
         // Asigna los pliegues, las caras se llenan despues de terminada la red con graph.populate(), ver despues del loop
         if (j === 0) {
             if (i%2 === 0) {
@@ -162,6 +154,8 @@ for (let i=0; i < patron.vertices_coords.length; i++) {
 patron.scale((h-0.4)/2);
 patron.translate(w/2,h/2);
 
+
+
 /*
 //Dibuja un circulo por cada vertice
 dibujo.origami.vertices(patron)
@@ -171,19 +165,21 @@ dibujo.origami.vertices(patron)
         .fill("white"));
 */
 
-// dibuja los edges con el patron de pliegues
+// dibuja las aristas con el patron de pliegues
 dibujo.origami.edges(patron).strokeWidth(0.01);
 
 /*
-// Dibuja las caras, pero quisiera dibujar el indice de cada cara
+// Dibuja las caras del patron
 dibujo.origami.faces(patron).fill('gold');
 
-//muestra un texto en la mitad del SVG
+//muestra un texto en el SVG
 dibujo.text( cara.toString() , w/2 - 0.6  , h/2 + 0.4)
     .fill('gold')
     .fontSize('1px');
 */
 
+
+///////////////////Ultimo paso, publica el pliegue generado.
 caja.appendChild(dibujo);
 
 //////////// Crear el objeto Fold
@@ -199,6 +195,7 @@ Corto y pego el resultado en un .FOLD
 //este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
 //este = "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
 
+
 /*
 este = "vertices_coords " + JSON.stringify(zTrans) +
     "edges_vertices " + JSON.stringify(patron.edges_vertices) +
@@ -207,12 +204,45 @@ este = "vertices_coords " + JSON.stringify(zTrans) +
     "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
 */
 
-//este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
-
+/*
 este = "vertices: " + patron.vertices.length.toString() +
     ", edges: " + patron.edges.length.toString() +
     ", faces: " + patron.faces.length.toString()
 ;
+*/
+
+
+
+/*
+////////////////////////////////////para visualizacion de proyeccion
+//Eliminar el patron.scale((h-0.4)/2) y patron.translate(w/2,h/2);
+//debo incluir el 0 en la coordenada z y sumar los vertices para tener los nuevos edges
+
+mismo = [];
+
+for (let i=0; i < patron.vertices_coords.length; i++) {
+    mismo.push( [
+        patron.vertices_coords[i][0],
+        patron.vertices_coords[i][1],
+        0
+    ]);
+}
+
+
+//2175+vertice
+cupula = [];
+var mas = 2176;
+
+// debe darme los nuevos edges, despues de haber agregado los vertices de la cupula
+for (let i=0; i < patron.edges_vertices.length; i++) {
+    cupula.push( [ patron.edges_vertices[i][0] + mas ,
+        patron.edges_vertices[i][1] + mas
+    ]);
+}
+
+este = "mismos vertices_coords" + JSON.stringify(mismo);
+//este = "nuevos edges_vertices" + JSON.stringify(cupula);
+*/
 
 const myFold = document.getElementById("objFold");
 myFold.textContent = este;

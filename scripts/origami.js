@@ -6,18 +6,20 @@ var dibujo = ear.svg();
 
 // define el tamaño del area en que se dibuja el svg. esquina superior izq (x,y), esquina inf derecha (x,y)
 dibujo.size(-0.1, -0.1, 8.1, 5.1);
-dibujo.scale(1, -1)
-//dibujo.background('black');
+//dibujo.scale(1, -1)
+dibujo.background('white');
+const w = dibujo.getWidth() ;
+const h = dibujo.getHeight() ;
 
 
 //Esta es la estructura base. Para utilizar Push es preciso declarar antes los arreglos
-var base = ear.graph();
-base.vertices_coords = [];
-base.edges_vertices = [];
-base.edges_assignment = [];
+var patron = ear.graph();
+patron.vertices_coords = [];
+patron.edges_vertices = [];
+patron.edges_assignment = [];
 
-const fil = 4;
-const col = 8;
+const fil = 6; // en circular 8
+const col = 12; //En circular 48
 
 const dx = 0.25;
 const dy = Math.sqrt(3)/4;
@@ -39,10 +41,10 @@ for (let i = 0; i < col; i++) {
         }
 
         //Establesco el numero actual de vertices antes de agregar los nuevos
-        nv = ear.graph.count(base, "vertices");
+        nv = ear.graph.count(patron, "vertices");
 
         // Crea los vertices
-        base.vertices_coords.push( // inicia en el centro baja al centro y gira contrario al reloj por fuera
+        patron.vertices_coords.push( // inicia en el centro baja al centro y gira contrario al reloj por fuera
             [ posx + 2*dx , posy + cent ], // mediana (centro) [0]
             [ posx + 2*dx , posy ], // base 1 del triangulo [1]
             [ posx + 4*dx , posy ], // base 2 del triangulo [2]
@@ -53,7 +55,7 @@ for (let i = 0; i < col; i++) {
         );
 
         // Crea las aristas
-        base.edges_vertices.push(
+        patron.edges_vertices.push(
             [nv, nv+1],
             [nv+1, nv+2], [nv+2, nv+3], [nv+3,nv+4], [nv+4,nv+5], [nv+5,nv+6], [nv+6,nv+1], // Triangulo exterior 1,2,3,4,5,6
             [nv,nv+3], [nv,nv+5], // 0*,7,8 Mediatrices Montaña
@@ -61,50 +63,91 @@ for (let i = 0; i < col; i++) {
         );
 
         // Asigna los pliegues, las caras se llenan despues de terminada la red con graph.populate(), ver despues del loop
-        base.edges_assignment.push(
+        patron.edges_assignment.push(
             "M", "M", "M", "M", "M", "M", "M", "M", "M",
             "V", "V", "V" );
     }
 }
 
 // Elimina duplicados
-ear.graph.clean(base, EPSILON)
+ear.graph.clean(patron, EPSILON)
 
 
 // Establece los limites externos.
-var sospechosos = ear.graph.getPlanarBoundary(base);
+var sospechosos = ear.graph.getPlanarBoundary(patron);
 
 let i = 0;
 for (ed in sospechosos["edges"]) {
-    base.edges_assignment[ sospechosos["edges"][i] ] = "B";
+    patron.edges_assignment[ sospechosos["edges"][i] ] = "B";
     i++;
 }
 
-//cuenta la cantidad de vertices
-nv = ear.graph.count(base, "vertices");
-
 //Establece las caras del pliegue una vez han sido definidos las aristas.
-base.populate();
+patron.populate();
 
+//////////////// Para el SVG escala y centra
+patron.scale(w/(col-2)); // escala de acuerdo al ancho
+//patron.scale(h/fil); // escala de acuerdo al ancho
+patron.translate(0,0); // Inicia el patron en (0,0)
 
-//dibuja los vertices
-dibujo.origami.vertices(base)
+/*
+//Dibuja un circulo por cada vertice
+dibujo.origami.vertices(patron)
     .childNodes
     .forEach((circle, i, arr) => circle
-        .radius(0.03)
+        .radius(0.022)
         .fill("white"));
+*/
 
-dibujo.origami.edges(base).strokeWidth(0.01); // dibuja los edges con el patron de pliegues
+// dibuja las aristas con el patron de pliegues
+dibujo.origami.edges(patron).strokeWidth(0.01);
 
-//mostrar los numeros de los vertices
-/*Toca arreglar el texto*/
-dibujo.scale(1, -1)
-    .text( nv.toString() , 2, 4.8)
+
+
+/*
+//muestra un texto en el SVG
+//dibujo.scale(1, -1); // habilitar si el patron esta invertido
+dibujo.text( nv.toString() , w/2 - 0.6  , h/2 + 0.4)
     .fill('gold')
     .fontSize('1px');
-
+*/
 
 caja.appendChild(dibujo);
+
+//////////// Crear el objeto Fold
+
+/* estos dos crean el JSON pero no lo reconoce origami simulator,
+Corto y pego el resultado en un .FOLD
+*/
+
+/*
+// Coloca todos los componentes para construir el FOLD
+este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) +
+    "edges_vertices " + JSON.stringify(patron.edges_vertices) +
+    "edges_assignment" + JSON.stringify(patron.edges_assignment) +
+    "faces_vertices" + JSON.stringify(patron.faces_vertices) +
+    "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
+*/
+
+//este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) ;
+//este = "edges_vertices:" + JSON.stringify(patron.edges_vertices) ;
+//este = "edges_assignment" + JSON.stringify(patron.edges_assignment) ;
+//este = "faces_vertices" + JSON.stringify(patron.faces_vertices) ;
+//este = "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
+
+
+
+// Muestra la cantidad de componentes
+este = "vertices: " + patron.vertices.length.toString() +
+    ", edges: " + patron.edges.length.toString() +
+    ", faces: " + patron.faces.length.toString()
+;
+
+const myFold = document.getElementById("objFold");
+myFold.textContent = este;
+
+
+
 
 /*
 // Estructura de un triangulo.
