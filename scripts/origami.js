@@ -18,8 +18,8 @@ patron.vertices_coords = [];
 patron.edges_vertices = [];
 patron.edges_assignment = [];
 
-const fil = 6; // en circular 8
-const col = 12; //En circular 48
+const fil = 3 ;//6; // en circular 8
+const col = 4 ;//12; //En circular 48
 
 const dx = 0.25;
 const dy = Math.sqrt(3)/4;
@@ -86,8 +86,8 @@ for (ed in sospechosos["edges"]) {
 patron.populate();
 
 //////////////// Para el SVG escala y centra
-patron.scale(w/(col-2)); // escala de acuerdo al ancho
-//patron.scale(h/fil); // escala de acuerdo al ancho
+patron.scale(w/(col+2)); // escala de acuerdo al ancho
+//patron.scale(h/(fil+2)); // escala de acuerdo al ancho
 patron.translate(0,0); // Inicia el patron en (0,0)
 
 /*
@@ -120,14 +120,14 @@ caja.appendChild(dibujo);
 Corto y pego el resultado en un .FOLD
 */
 
-/*
+
 // Coloca todos los componentes para construir el FOLD
 este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) +
     "edges_vertices " + JSON.stringify(patron.edges_vertices) +
     "edges_assignment" + JSON.stringify(patron.edges_assignment) +
     "faces_vertices" + JSON.stringify(patron.faces_vertices) +
     "edges_foldAngle" + JSON.stringify(patron.edges_foldAngle) ;
-*/
+
 
 //este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) ;
 //este = "edges_vertices:" + JSON.stringify(patron.edges_vertices) ;
@@ -137,12 +137,13 @@ este = "vertices_coords: " + JSON.stringify(patron.vertices_coords) +
 
 
 
+/*
 // Muestra la cantidad de componentes
 este = "vertices: " + patron.vertices.length.toString() +
     ", edges: " + patron.edges.length.toString() +
     ", faces: " + patron.faces.length.toString()
 ;
-
+*/
 const myFold = document.getElementById("objFold");
 myFold.textContent = este;
 
