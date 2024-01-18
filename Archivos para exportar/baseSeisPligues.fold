@@ -1,0 +1,31 @@
+{
+    "file_spec": 1.1,
+    "file_creator": "Origami Simulator: http://git.amandaghassaei.com/OrigamiSimulator/",
+    "file_author": "",
+    "file_classes": [
+        "singleModel"
+    ],
+    "frame_title": "trianguloBase",
+    "frame_classes": [
+        "foldedForm"
+    ],
+    "frame_attributes": [
+        "3D"
+    ],
+    "frame_unit": "unit",
+    "vertices_coords": [
+        [0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[2,2]
+    ],
+    "edges_vertices": [
+        [0,1],[1,2],[2,5],[5,7],[7,6],[6,3],[3,0],[1,4],[3,4],[5,4],[4,6],[4,7]
+    ],
+    "edges_assignment": [
+        "B","B","B","B","B","B","B","V","V","V","V","V"
+    ],
+    "faces_vertices": [
+        [0,1,4,3],[1,2,5,4],[3,4,6],[4,5,7],[4,7,6]
+    ],
+    "edges_foldAngle": [
+        0,0,0,0,0,0,0,180,180,180,180,180
+    ]
+}

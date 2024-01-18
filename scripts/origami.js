@@ -90,13 +90,14 @@ patron.scale(w/(col+2)); // escala de acuerdo al ancho
 //patron.scale(h/(fil+2)); // escala de acuerdo al ancho
 patron.translate(0,0); // Inicia el patron en (0,0)
 
-/*
+
 //Dibuja un circulo por cada vertice
+/*
 dibujo.origami.vertices(patron)
     .childNodes
     .forEach((circle, i, arr) => circle
-        .radius(0.022)
-        .fill("white"));
+        .radius(0.035)
+        .fill("#13c124"));
 */
 
 // dibuja las aristas con el patron de pliegues
